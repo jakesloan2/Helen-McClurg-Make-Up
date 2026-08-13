@@ -14,32 +14,47 @@
    so the site never breaks while you are still collecting them.
 ------------------------------------------------------------ */
 const IMAGES = {
-  /* home */
-  'hero':            '',   /* landscape, 2000px wide or more — this is the full first screen */
-  'folio-01':        '',   /* portrait 4:5 */
-  'folio-02':        '',
-  'folio-03':        '',
-  'folio-04':        '',
-  'folio-05':        '',
-  'chapter-brides':  '',   /* landscape, full-bleed */
-  'chapter-party':   '',
-  'chapter-morning': '',
+  /* ---------- HOME ---------- */
+  'hero':            { src:'images/bridal-hero.jpg',          alt:'Helen McClurg applying bridal makeup by a window on a wedding morning' },
 
-  /* about */
-  'about-01':        '',
-  'about-02':        '',
+  'folio-01':        { src:'images/bride-sleek-veil.jpg',     alt:'Bride in a sleek crepe gown with a pearl-edged veil' },
+  'folio-02':        { src:'images/bride-stairs.jpg',         alt:'Bride on the stairs with a bright summer bouquet' },
+  'folio-03':        { src:'images/bride-updo.jpg',           alt:'Bride with a soft updo and pearl hairpiece' },
+  'folio-04':        { src:'images/bride-lace-sleeves.jpg',   alt:'Bride in an off-the-shoulder lace gown with a red and pink bouquet' },
 
-  /* services */
-  'services-01':     '',
-  'services-02':     '',
+  'chapter-brides':  { src:'images/bride-red-bouquet.jpg',    alt:'Bride in a lace gown holding a red and orange bouquet' },
+  'chapter-party':   { src:'images/party-blue-dresses.jpg',   alt:'Bride and her bridesmaids in pale blue, makeup by Helen McClurg' },
+  'chapter-morning': { src:'images/helen-chandelier.jpg',     alt:'Helen applying lip colour to a bride beneath a chandelier' },
 
-  /* gallery */
-  'gal-bride-01':'', 'gal-bride-02':'', 'gal-bride-03':'',
-  'gal-bride-04':'', 'gal-bride-05':'', 'gal-bride-06':'',
-  'gal-chapter':'',
-  'gal-party-01':'', 'gal-party-02':'', 'gal-party-03':'',
-  'gal-party-04':'', 'gal-party-05':'', 'gal-party-06':'',
-  'gal-look-01':'', 'gal-look-02':'', 'gal-look-03':'', 'gal-look-04':''
+  /* ---------- ABOUT ---------- */
+  'about-01':        { src:'images/helen-blusher.jpg',        alt:'Helen McClurg applying blusher to a bride' },
+  'about-02':        { src:'images/helen-ringlight.jpg',      alt:'Helen McClurg at work with her professional kit and ring light' },
+
+  /* ---------- SERVICES ---------- */
+  'services-01':     { src:'images/helen-veil-touchup.jpg',   alt:'Helen touching up a bride in her gown and full-length veil' },
+  'services-02':     { src:'images/bride-peach-bouquet.jpg',  alt:'Bride with a soft glowing look and a peach bouquet' },
+
+  /* ---------- GALLERY: BRIDES ---------- */
+  'gal-01':          { src:'images/bride-sleek-veil.jpg',     alt:'Bride in a sleek crepe gown with a pearl-edged veil' },
+  'gal-02':          { src:'images/bride-stairs.jpg',         alt:'Bride on the stairs with a bright summer bouquet' },
+  'gal-03':          { src:'images/bride-updo.jpg',           alt:'Bride with a soft updo and pearl hairpiece' },
+  'gal-04':          { src:'images/bride-lace-sleeves.jpg',   alt:'Bride in an off-the-shoulder lace gown' },
+  'gal-05':          { src:'images/bride-red-bouquet.jpg',    alt:'Bride holding a red and orange bouquet' },
+  'gal-06':          { src:'images/bride-peach-bouquet.jpg',  alt:'Bride with a soft glowing look and a peach bouquet' },
+  'gal-07':          { src:'images/bride-pearl-necklace.jpg', alt:'Bride in a veil wearing a pearl necklace' },
+
+  /* ---------- GALLERY: BRIDAL PARTY ---------- */
+  'gal-chapter':     { src:'images/party-blue-dresses.jpg',   alt:'Bride and bridesmaids together after the ceremony' },
+  'gal-party-01':    { src:'images/party-wisteria.jpg',       alt:'Bride and her bridesmaids under a wisteria walkway' },
+  'gal-party-02':    { src:'images/party-blue-dresses.jpg',   alt:'Bride and bridesmaids in pale blue dresses' },
+
+  /* ---------- GALLERY: BEHIND THE SCENES ---------- */
+  'gal-bts-01':      { src:'images/helen-chandelier.jpg',     alt:'Helen applying lip colour beneath a chandelier' },
+  'gal-bts-02':      { src:'images/helen-blusher.jpg',        alt:'Helen applying blusher to a bride' },
+  'gal-bts-03':      { src:'images/helen-laughing.jpg',       alt:'Helen laughing with a bride on her wedding morning' },
+  'gal-bts-04':      { src:'images/bridal-hero.jpg',          alt:'Helen applying makeup by a window' },
+  'gal-bts-05':      { src:'images/helen-ringlight.jpg',      alt:'Helen at work with her professional kit' },
+  'gal-bts-06':      { src:'images/helen-veil-touchup.jpg',   alt:'Helen adjusting a bride before she leaves' }
 };
 
 /* ---------- 2. GOOGLE REVIEWS -------------------------------
