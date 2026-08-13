@@ -73,12 +73,31 @@
     if (node.hasAttribute('data-dark')) node.classList.add('slot--dark');
     if (ratio !== 'cover') node.style.setProperty('--ar', ratio);
 
-    var src = library[key];
+    var entry = library[key];
+    var src = (entry && typeof entry === 'object') ? entry.src : entry;
+    var alt = (entry && typeof entry === 'object' && entry.alt) ? entry.alt : null;
     if (src) {
       var img = new Image();
-      img.src = src;
-      img.alt = node.getAttribute('data-alt') || 'Bridal makeup by Helen McClurg';
-      if (key !== 'hero') img.loading = 'lazy';
+      var small = src.replace(/\.jpg$/, '-sm.jpg');
+
+      img.alt = alt || node.getAttribute('data-alt') || 'Bridal makeup by Helen McClurg';
+      img.decoding = 'async';
+
+      if (key === 'hero') {
+        img.loading = 'eager';
+        img.setAttribute('fetchpriority', 'high');
+      } else {
+        img.loading = 'lazy';
+      }
+
+      // Use the small file on phones if it exists; otherwise fall back to
+      // the full-size file automatically. This means a missing -sm file
+      // can never break an image -- it just serves the bigger version.
+      var useSmall = window.matchMedia('(max-width: 760px)').matches;
+      img.src = useSmall ? small : src;
+      img.onerror = function () {
+        if (img.src.indexOf('-sm.jpg') !== -1) { img.onerror = null; img.src = src; }
+      };
       node.appendChild(img);
     } else {
       var tag = document.createElement('span');
