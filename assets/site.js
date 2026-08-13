@@ -1,0 +1,262 @@
+/* ============================================================
+   HELEN McCLURG MAKE UP — shared behaviour
+   Loads on every page. Each block checks the element exists
+   first, so one file safely serves all five pages.
+   ============================================================ */
+(function () {
+  'use strict';
+
+  /* ----------------------------------------------------------
+     1. PRELOADER
+     Shows on first visit of a session only. Three separate
+     safety nets so it can never get stuck on screen:
+       - hides on window load
+       - hides after a hard 2.4s timeout regardless
+       - hides immediately if anything above throws
+  ---------------------------------------------------------- */
+  var preload = document.getElementById('preload');
+  var hero = document.querySelector('.hero');
+
+  function revealHero() {
+    if (hero) {
+      requestAnimationFrame(function () { hero.classList.add('is-in'); });
+    }
+  }
+
+  function dismissPreloader() {
+    if (!preload || preload.classList.contains('is-done')) return;
+    preload.classList.add('is-done');
+    document.body.classList.remove('is-locked');
+    revealHero();
+    setTimeout(function () {
+      if (preload && preload.parentNode) preload.parentNode.removeChild(preload);
+    }, 900);
+  }
+
+  if (preload) {
+    var seen = false;
+    try { seen = sessionStorage.getItem('hmc-preloader') === 'shown'; } catch (e) { seen = false; }
+
+    if (seen) {
+      preload.classList.add('is-done');
+      if (preload.parentNode) preload.parentNode.removeChild(preload);
+      revealHero();
+    } else {
+      try { sessionStorage.setItem('hmc-preloader', 'shown'); } catch (e) {}
+      document.body.classList.add('is-locked');
+
+      // hard cap — runs no matter what else happens
+      setTimeout(dismissPreloader, 2400);
+
+      if (document.readyState === 'complete') {
+        setTimeout(dismissPreloader, 1500);
+      } else {
+        window.addEventListener('load', function () { setTimeout(dismissPreloader, 900); });
+      }
+      // last resort if load never fires
+      setTimeout(dismissPreloader, 5000);
+    }
+  } else {
+    revealHero();
+  }
+
+  /* ----------------------------------------------------------
+     2. IMAGE SLOTS
+  ---------------------------------------------------------- */
+  var ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="4" width="18" height="16"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M3 17l5-4 4 3 3-3 6 5"/></svg>';
+  var library = (typeof IMAGES !== 'undefined') ? IMAGES : {};
+
+  Array.prototype.forEach.call(document.querySelectorAll('[data-slot]'), function (node) {
+    var key = node.getAttribute('data-slot');
+    var ratio = node.getAttribute('data-ratio') || '3/4';
+    node.classList.add('slot');
+    if (node.hasAttribute('data-dark')) node.classList.add('slot--dark');
+    if (ratio !== 'cover') node.style.setProperty('--ar', ratio);
+
+    var src = library[key];
+    if (src) {
+      var img = new Image();
+      img.src = src;
+      img.alt = node.getAttribute('data-alt') || 'Bridal makeup by Helen McClurg';
+      if (key !== 'hero') img.loading = 'lazy';
+      node.appendChild(img);
+    } else {
+      var tag = document.createElement('span');
+      tag.className = 'slot__tag';
+      tag.innerHTML = ICON + '<span>' + key + '</span>';
+      node.appendChild(tag);
+    }
+  });
+
+  /* ----------------------------------------------------------
+     3. MENU
+  ---------------------------------------------------------- */
+  var menu = document.getElementById('menu');
+  var openBtn = document.getElementById('menuOpen');
+  var closeBtn = document.getElementById('menuClose');
+
+  if (menu && openBtn && closeBtn) {
+    var openMenu = function () {
+      menu.classList.add('is-open');
+      menu.setAttribute('aria-hidden', 'false');
+      openBtn.setAttribute('aria-expanded', 'true');
+      document.body.classList.add('is-locked');
+      closeBtn.focus();
+    };
+    var closeMenu = function () {
+      menu.classList.remove('is-open');
+      menu.setAttribute('aria-hidden', 'true');
+      openBtn.setAttribute('aria-expanded', 'false');
+      document.body.classList.remove('is-locked');
+      openBtn.focus();
+    };
+    openBtn.addEventListener('click', openMenu);
+    closeBtn.addEventListener('click', closeMenu);
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && menu.classList.contains('is-open')) closeMenu();
+    });
+
+    // mark the current page
+    var here = (location.pathname.split('/').pop() || 'index.html').toLowerCase();
+    Array.prototype.forEach.call(menu.querySelectorAll('.menu__item'), function (a) {
+      if (a.getAttribute('href').toLowerCase() === here) a.setAttribute('aria-current', 'page');
+    });
+  }
+
+  /* ----------------------------------------------------------
+     4. PORTFOLIO CAROUSEL
+  ---------------------------------------------------------- */
+  var track = document.getElementById('folioTrack');
+  if (track) {
+    var slides = Array.prototype.slice.call(track.children);
+    var countEl = document.getElementById('folioCount');
+    var index = 0;
+
+    var pad = function (n) { return n < 10 ? '0' + n : String(n); };
+
+    var goTo = function (i) {
+      index = (i + slides.length) % slides.length;
+      var slide = slides[index];
+      var offset = slide.offsetLeft + slide.offsetWidth / 2 - track.parentElement.offsetWidth / 2;
+      track.style.transform = 'translateX(' + (-offset) + 'px)';
+      slides.forEach(function (s, n) { s.classList.toggle('is-active', n === index); });
+      if (countEl) countEl.textContent = pad(index + 1) + ' / ' + pad(slides.length);
+    };
+
+    var prev = document.getElementById('folioPrev');
+    var next = document.getElementById('folioNext');
+    if (prev) prev.addEventListener('click', function () { goTo(index - 1); });
+    if (next) next.addEventListener('click', function () { goTo(index + 1); });
+    window.addEventListener('resize', function () { goTo(index); });
+
+    var x0 = null;
+    track.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+    track.addEventListener('touchend', function (e) {
+      if (x0 === null) return;
+      var dx = e.changedTouches[0].clientX - x0;
+      if (Math.abs(dx) > 44) goTo(index + (dx < 0 ? 1 : -1));
+      x0 = null;
+    });
+
+    goTo(0);
+    window.addEventListener('load', function () { goTo(index); });
+  }
+
+  /* ----------------------------------------------------------
+     5. REVIEWS + VENUES
+  ---------------------------------------------------------- */
+  var reviewsGrid = document.getElementById('reviewsGrid');
+  if (reviewsGrid && typeof REVIEWS !== 'undefined' && !reviewsGrid.children.length) {
+    reviewsGrid.innerHTML = REVIEWS.map(function (r) {
+      return '<figure class="review"><blockquote>&ldquo;' + r.quote + '&rdquo;</blockquote>' +
+             '<figcaption>' + r.name + ' &middot; ' + r.meta + '</figcaption></figure>';
+    }).join('');
+  }
+  if (typeof GOOGLE_REVIEW_URL !== 'undefined') {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-google-link]'), function (a) {
+      a.href = GOOGLE_REVIEW_URL;
+    });
+  }
+
+  var venuesRow = document.getElementById('venuesRow');
+  if (venuesRow && typeof VENUES !== 'undefined') {
+    venuesRow.innerHTML = VENUES.concat(VENUES).map(function (v) {
+      return '<span>' + v + '</span>';
+    }).join('');
+  }
+
+  /* ----------------------------------------------------------
+     6. FAQ
+  ---------------------------------------------------------- */
+  var faq = document.getElementById('faq');
+  if (faq && typeof FAQS !== 'undefined') {
+    faq.innerHTML = FAQS.map(function (item, i) {
+      var paras = item[1].map(function (p) { return '<p>' + p + '</p>'; }).join('');
+      return '<div class="faq__item">' +
+               '<button class="faq__q" aria-expanded="false" aria-controls="faq-a-' + i + '">' +
+                 '<span>' + item[0] + '</span><span aria-hidden="true">+</span>' +
+               '</button>' +
+               '<div class="faq__a" id="faq-a-' + i + '"><div>' + paras + '</div></div>' +
+             '</div>';
+    }).join('');
+
+    Array.prototype.forEach.call(faq.querySelectorAll('.faq__q'), function (btn) {
+      btn.addEventListener('click', function () {
+        var item = btn.parentElement;
+        var panel = item.querySelector('.faq__a');
+        var open = item.classList.toggle('is-open');
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+        panel.style.maxHeight = open ? panel.scrollHeight + 'px' : 0;
+      });
+    });
+  }
+
+  /* ----------------------------------------------------------
+     7. ENQUIRY FORM
+     To make this send: sign up for Formspree (free), then set
+     the form's action to your endpoint and remove this block.
+  ---------------------------------------------------------- */
+  var form = document.getElementById('enquiryForm');
+  if (form) {
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var status = document.getElementById('formStatus');
+      if (!form.checkValidity()) {
+        if (status) status.textContent = 'Please add your name, email, wedding date, location and party size.';
+        form.reportValidity();
+        return;
+      }
+      if (status) status.textContent = 'Thank you — your enquiry is on its way. I\u2019ll reply within 48 hours.';
+      form.reset();
+    });
+  }
+
+  /* ----------------------------------------------------------
+     8. SCROLL REVEALS
+  ---------------------------------------------------------- */
+  var reveals = document.querySelectorAll('.reveal');
+  if (reveals.length) {
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (en) {
+          if (en.isIntersecting) {
+            en.target.classList.add('is-visible');
+            io.unobserve(en.target);
+          }
+        });
+      }, { rootMargin: '0px 0px -12% 0px' });
+      Array.prototype.forEach.call(reveals, function (el) { io.observe(el); });
+    } else {
+      Array.prototype.forEach.call(reveals, function (el) { el.classList.add('is-visible'); });
+    }
+  }
+
+  /* ----------------------------------------------------------
+     9. ODDS AND ENDS
+  ---------------------------------------------------------- */
+  var year = document.getElementById('year');
+  if (year) year.textContent = new Date().getFullYear();
+
+  var mark = document.getElementById('topMark');
+  if (mark && !document.querySelector('.hero')) mark.classList.add('is-shown');
+})();
