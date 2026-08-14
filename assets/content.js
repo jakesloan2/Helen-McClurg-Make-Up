@@ -17,14 +17,28 @@ const IMAGES = {
   /* ---------- HOME ---------- */
   'hero':            { src:'images/bridal-hero.jpg',          alt:'Helen McClurg applying bridal makeup by a window on a wedding morning' },
 
+  /* portfolio carousel */
   'folio-01':        { src:'images/bride-sleek-veil.jpg',     alt:'Bride in a sleek crepe gown with a pearl-edged veil' },
   'folio-02':        { src:'images/bride-stairs.jpg',         alt:'Bride on the stairs with a bright summer bouquet' },
   'folio-03':        { src:'images/bride-updo.jpg',           alt:'Bride with a soft updo and pearl hairpiece' },
   'folio-04':        { src:'images/bride-lace-sleeves.jpg',   alt:'Bride in an off-the-shoulder lace gown with a red and pink bouquet' },
+  'folio-05':        { src:'images/bride-red-bouquet.jpg',    alt:'Bride in a lace gown holding a red and orange bouquet' },
+  'folio-06':        { src:'images/bride-peach-bouquet.jpg',  alt:'Bride with a soft glowing look and a peach bouquet' },
+  'folio-07':        { src:'images/bride-pearl-necklace.jpg', alt:'Bride in a veil wearing a pearl necklace' },
+  'folio-08':        { src:'images/party-wisteria.jpg',       alt:'Bride and her bridesmaids under a wisteria walkway' },
 
-  'chapter-brides':  { src:'images/bride-red-bouquet.jpg',    alt:'Bride in a lace gown holding a red and orange bouquet' },
-  'chapter-party':   { src:'images/party-blue-dresses.jpg',   alt:'Bride and her bridesmaids in pale blue, makeup by Helen McClurg' },
+  /* full-bleed bands */
+  'chapter-brides':  { src:'images/bride-stairs.jpg',         alt:'Bride on the stairs before leaving for her ceremony' },
+  'chapter-party':   { src:'images/party-wisteria.jpg',       alt:'Bride and bridesmaids under a wisteria walkway in pale blue' },
   'chapter-morning': { src:'images/helen-chandelier.jpg',     alt:'Helen applying lip colour to a bride beneath a chandelier' },
+
+  /* instagram strip */
+  'insta-01':        { src:'images/bride-sleek-veil.jpg',     alt:'Bridal makeup by Helen McClurg' },
+  'insta-02':        { src:'images/helen-blusher.jpg',        alt:'Helen McClurg at work on a wedding morning' },
+  'insta-03':        { src:'images/bride-updo.jpg',           alt:'Bridal makeup by Helen McClurg' },
+  'insta-04':        { src:'images/party-blue-dresses.jpg',   alt:'Bridal party makeup by Helen McClurg' },
+  'insta-05':        { src:'images/bride-lace-sleeves.jpg',   alt:'Bridal makeup by Helen McClurg' },
+  'insta-06':        { src:'images/helen-veil-touchup.jpg',   alt:'Helen McClurg touching up a bride' },
 
   /* ---------- ABOUT ---------- */
   'about-01':        { src:'images/helen-blusher.jpg',        alt:'Helen McClurg applying blusher to a bride' },
@@ -33,6 +47,9 @@ const IMAGES = {
   /* ---------- SERVICES ---------- */
   'services-01':     { src:'images/helen-veil-touchup.jpg',   alt:'Helen touching up a bride in her gown and full-length veil' },
   'services-02':     { src:'images/bride-peach-bouquet.jpg',  alt:'Bride with a soft glowing look and a peach bouquet' },
+
+  /* ---------- TESTIMONIALS ---------- */
+  'quotes-01':       { src:'images/helen-laughing.jpg',       alt:'Helen laughing with a bride on her wedding morning' },
 
   /* ---------- GALLERY: BRIDES ---------- */
   'gal-01':          { src:'images/bride-sleek-veil.jpg',     alt:'Bride in a sleek crepe gown with a pearl-edged veil' },
@@ -48,7 +65,7 @@ const IMAGES = {
   'gal-party-01':    { src:'images/party-wisteria.jpg',       alt:'Bride and her bridesmaids under a wisteria walkway' },
   'gal-party-02':    { src:'images/party-blue-dresses.jpg',   alt:'Bride and bridesmaids in pale blue dresses' },
 
-  /* ---------- GALLERY: BEHIND THE SCENES ---------- */
+  /* ---------- GALLERY: THE MORNING ---------- */
   'gal-bts-01':      { src:'images/helen-chandelier.jpg',     alt:'Helen applying lip colour beneath a chandelier' },
   'gal-bts-02':      { src:'images/helen-blusher.jpg',        alt:'Helen applying blusher to a bride' },
   'gal-bts-03':      { src:'images/helen-laughing.jpg',       alt:'Helen laughing with a bride on her wedding morning' },
@@ -67,10 +84,16 @@ const IMAGES = {
 const GOOGLE_REVIEW_URL = '#';
 
 const REVIEWS = [
-  { quote:'Paste review text here.', name:'Bride name', meta:'Google review' },
-  { quote:'Paste review text here.', name:'Bride name', meta:'Google review' },
-  { quote:'Paste review text here.', name:'Bride name', meta:'Google review' }
+  { quote:'It lasted beautifully all day and night, I didn\'t need to touch up my makeup at all. Even after hours of dancing, it still looked fresh, glowing and flawless.',
+    name:'Bride', meta:'Google review' },
+  { quote:'She brought such a calm and cool energy to the morning of my wedding. Everyone complimented the make up of my bridal party and it did not budge the entire day.',
+    name:'Bride', meta:'Google review' },
+  { quote:'I actually teared up when I saw my makeup on my wedding day. I still looked like myself but the most elevated version.',
+    name:'Bride', meta:'Google review' }
 ];
+
+const INSTAGRAM_URL = 'https://www.instagram.com/helen_mcclurg_makeup';
+const INSTAGRAM_HANDLE = '@helen_mcclurg_makeup';
 
 /* ---------- 3. VENUES --------------------------------------- */
 const VENUES = ['Clandeboye','Orangetree','Culloden','Titanic','The Merchant'];
@@ -114,4 +137,58 @@ const FAQS = [
    ['This is where years of bridal experience really come into play.',
     'Wedding mornings don\'t always go exactly to plan, and I\'m very used to working in busy, sometimes high-pressure environments. I\'ll keep a close eye on the timeline and adapt where needed — which is exactly why we allow that extra hour before you leave.',
     'My job isn\'t just to create beautiful makeup, it\'s to bring the calm and the glam, so you can relax and enjoy your morning knowing you\'re in safe hands.']]
+];
+
+/* ---------- 5. TESTIMONIALS -----------------------------------
+   Transcribed from the messages and reviews Helen supplied.
+   Add each bride's first name in place of 'Bride' where you have
+   permission -- named testimonials are far more persuasive.
+------------------------------------------------------------ */
+const TESTIMONIALS = [
+  {
+    stars: 5,
+    who: 'Bride, Clandeboye Lodge',
+    paras: [
+      'I first met Helen briefly at a wedding fair in the Clandeboye Lodge, and I knew straight away that I wanted to book her. She came across as one of the loveliest, most calming people, and her makeup artistry reflects that perfectly.',
+      'On the morning of the wedding, Helen created such a relaxed atmosphere and made me, my bridesmaids and my mum feel completely at ease. The makeup she did for all of us was honestly absolutely stunning \u2014 I genuinely didn\'t want to take mine off at the end of the night. It lasted beautifully all day and night, I didn\'t need to touch up my makeup at all. Even after hours of dancing, it still looked fresh, glowing and flawless.',
+      'I honestly don\'t think I\'ve ever felt more beautiful. If you\'re considering who to book for your wedding makeup, I couldn\'t recommend Helen highly enough. She is absolutely incredible, and I would recommend her 10,000 times over.'
+    ]
+  },
+  {
+    stars: 5,
+    who: 'Bride',
+    paras: [
+      'I was lucky enough to stumble across Helen and hire her as my make up artist for my wedding. Wow, best decision I made. She brought such a calm and cool energy to the morning of my wedding.',
+      'The make up was stunning, I have never seen my eyes the colour they were when Helen did my eyes. Everyone complimented the make up of my bridal party (a range of ages) and it did not budge the entire day. She did all of this without a trial, at my request.',
+      'I would and will highly recommend her to all future brides!'
+    ]
+  },
+  {
+    stars: 5,
+    who: 'Bride',
+    paras: [
+      'Attention all brides to be! Let me make a difficult choice easy for you \u2014 book Helen for your wedding makeup.',
+      'Helen herself is so lovely, so calm, so joyful and definitely the type of person you want around on your wedding morning. Everyone was so happy with their makeup \u2014 Helen did two bridesmaids and the mother of the bride as well as myself, and everyone was so delighted with how they looked. She was so open to making little tweaks and changes if they wanted.',
+      'I actually booked a second makeup trial after I changed my idea of what I wanted for my bridal look, and Helen was so accommodating to fit me in close to my wedding date. I actually teared up when I saw my makeup on my wedding day. I still looked like myself but the most elevated version.',
+      'Helen went above and beyond \u2014 she helped the bridesmaids get ready and sorted out all of our bouquets so they were out of the water and dried in time for us all. She stayed until the very last second to do any touch ups. I cannot recommend her enough.'
+    ]
+  },
+  {
+    stars: 5,
+    who: 'Bride',
+    paras: [
+      'I gurned, and then I laughed until I cried, and then I probably gurned some more \u2014 and it stood the test of time.',
+      'Helen was the first person I booked after nabbing our date and I was absolutely delighted she was free. She\'d sorted us a few years prior for my sister\'s wedding so I was well aware of how incredible she is at her job. Knowing very little about make up, I was more than happy for her to work her magic and she did just that.',
+      'I felt completely comfortable in my own skin the entire day. We had the loveliest morning \u2014 the best chats and a bit of craic. Cannot recommend Helen enough, from communication to last minute needs, absolutely nothing was too much. Best there is, thank you so so much.'
+    ]
+  },
+  {
+    stars: 5,
+    who: 'Bride',
+    paras: [
+      'A massive thank you for yesterday. I can\'t express how much we loved having you there as part of the morning \u2014 you made us all feel so relaxed and you definitely put me at ease.',
+      'We absolutely loved our makeup. My bridesmaids and mum were absolutely stunning, and everyone was commenting through the day how fabulous our makeup was. I absolutely loved everything about mine, it just felt so glowy and fabulous.',
+      'Feeling very lucky to have found you and that you were able to join us. Thank you!'
+    ]
+  }
 ];
