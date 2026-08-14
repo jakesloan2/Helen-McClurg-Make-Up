@@ -113,7 +113,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 /* ---------- top bar ---------- */
 .topbar{
   position:fixed;top:0;left:0;right:0;z-index:60;
-  display:flex;align-items:center;justify-content:space-between;
+  display:flex;flex-direction:row-reverse;align-items:center;justify-content:space-between;
   padding:26px var(--gutter);pointer-events:none;mix-blend-mode:difference;
 }
 .topbar a,.topbar button{pointer-events:auto}
@@ -167,6 +167,7 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .menu.is-open .menu__item:nth-child(3){transition-delay:.22s}
 .menu.is-open .menu__item:nth-child(4){transition-delay:.28s}
 .menu.is-open .menu__item:nth-child(5){transition-delay:.34s}
+.menu.is-open .menu__item:nth-child(6){transition-delay:.40s}
 .menu__num{font-size:.36em;line-height:1.6;letter-spacing:.04em}
 .menu__item:hover{color:var(--stone)}
 .menu__item[aria-current="page"] .menu__label{border-bottom:1px solid var(--ink);padding-bottom:2px}
@@ -213,16 +214,6 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
 .hero.is-in .hero__name,
 .hero.is-in .hero__role{opacity:1;transform:none}
 
-.hero__scroll{
-  position:absolute;left:50%;bottom:clamp(26px,5vh,48px);
-  transform:translateX(-50%);z-index:2;
-  display:grid;justify-items:center;gap:12px;
-  font-size:10px;letter-spacing:.3em;text-transform:uppercase;
-  color:#fff;text-decoration:none;opacity:0;
-  transition:opacity 1s .5s var(--ease);
-}
-.hero.is-in .hero__scroll{opacity:.9}
-.hero__scroll i{display:block;width:1px;height:38px;background:rgba(255,255,255,.7)}
 
 /* ---------- text blocks ---------- */
 .textblock{padding:clamp(72px,13vh,150px) var(--gutter)}
@@ -240,16 +231,30 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   text-transform:uppercase;margin:0;position:relative;z-index:1;white-space:nowrap;
 }
 .folio__track{
-  position:relative;z-index:2;margin-top:clamp(-52px,-6vw,-30px);
-  display:flex;align-items:center;gap:clamp(12px,2vw,26px);
-  transition:transform .7s var(--ease);will-change:transform;
+  position:relative;z-index:2;
+  margin-top:clamp(-52px,-6vw,-30px);
+  display:flex;
+  gap:clamp(12px,2vw,26px);
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  scroll-behavior:smooth;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+  padding:10px calc(50% - min(36vw, 235px)) 26px;
 }
+.folio__track::-webkit-scrollbar{display:none}
 .folio__slide{
-  flex:0 0 auto;width:min(72vw,470px);padding:8px;background:var(--white);
-  box-shadow:0 12px 40px rgba(20,17,15,.09);opacity:.42;
-  transition:opacity .6s var(--ease);
+  flex:0 0 min(72vw,470px);
+  scroll-snap-align:center;
+  padding:8px;background:var(--white);
+  box-shadow:0 12px 40px rgba(20,17,15,.09);
+  opacity:.34;
+  transform:scale(.88);
+  transform-origin:center center;
+  transition:opacity .55s var(--ease), transform .55s var(--ease);
 }
-.folio__slide.is-active{opacity:1}
+.folio__slide.is-active{opacity:1;transform:scale(1)}
 .folio__slide .slot{--ar:4/5}
 .folio__nav{
   display:flex;justify-content:space-between;align-items:center;gap:24px;
@@ -414,4 +419,59 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   *,*::before,*::after{animation-duration:.001ms !important;animation-iteration-count:1 !important;transition-duration:.001ms !important}
   .reveal{opacity:1;transform:none}
   .hero__name,.hero__role,.hero__scroll{opacity:1;transform:none}
+}
+
+/* ---------- instagram ---------- */
+.insta{padding:clamp(60px,10vh,120px) 0 clamp(50px,8vh,100px);text-align:center;overflow:hidden}
+.insta__title{
+  font-family:var(--serif);font-weight:400;
+  font-size:clamp(46px,13vw,150px);line-height:.9;
+  text-transform:uppercase;margin:0 0 clamp(26px,4vh,46px);
+}
+.insta__row{
+  display:flex;gap:3px;
+  overflow-x:auto;scrollbar-width:none;-ms-overflow-style:none;
+  padding:0 3px;
+}
+.insta__row::-webkit-scrollbar{display:none}
+.insta__row a{
+  flex:0 0 clamp(128px,23vw,210px);
+  display:block;position:relative;overflow:hidden;
+}
+.insta__row .slot{--ar:1/1}
+.insta__row a::after{
+  content:"";position:absolute;inset:0;
+  background:rgba(20,17,15,0);transition:background .4s var(--ease);
+}
+.insta__row a:hover::after{background:rgba(20,17,15,.16)}
+.insta__handle{
+  display:inline-block;margin-top:clamp(26px,4vh,44px);
+  font-size:clamp(12px,1.6vw,15px);letter-spacing:.28em;
+  text-transform:uppercase;text-decoration:none;color:var(--ink);
+}
+.insta__handle:hover{opacity:.6}
+
+/* ---------- testimonials ---------- */
+.quotes{padding:0 var(--gutter) clamp(60px,10vh,120px)}
+.quote{
+  border-top:var(--rule);
+  padding:clamp(34px,6vh,58px) 0;
+  display:grid;grid-template-columns:auto 1fr;
+  gap:clamp(20px,4vw,56px);align-items:start;
+}
+.quote:last-child{border-bottom:var(--rule)}
+.quote__stars{font-size:13px;letter-spacing:.18em;color:var(--ink);padding-top:8px;white-space:nowrap}
+.quote__body p{
+  font-family:var(--serif-fine);
+  font-size:clamp(19px,2.1vw,26px);line-height:1.45;
+  color:var(--ink);margin:0 0 1em;max-width:44em;
+}
+.quote__body p:last-of-type{margin-bottom:18px}
+.quote__who{
+  font-family:var(--sans);font-size:11px;letter-spacing:.26em;
+  text-transform:uppercase;color:var(--stone);margin:0;
+}
+@media (max-width:600px){
+  .quote{grid-template-columns:1fr;gap:14px}
+  .quote__stars{padding-top:0}
 }
