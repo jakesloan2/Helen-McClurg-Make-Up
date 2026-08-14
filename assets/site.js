@@ -79,15 +79,35 @@
     }
 
     var img = new Image();
+    var small = src.replace(/\.jpg$/, '-sm.jpg');
+
+    // How wide will this image actually be drawn? Telling the browser
+    // lets it download the 640px file on phones instead of the full one.
+    var sizes = '(max-width: 760px) 100vw, 50vw';
+    if (node.closest) {
+      if (node.closest('.insta__row'))      sizes = '(max-width: 900px) 34vw, 11vw';
+      else if (node.closest('.folio'))      sizes = '(max-width: 760px) 76vw, 470px';
+      else if (node.closest('.chapter'))    sizes = '100vw';
+      else if (node.closest('.hero'))       sizes = '100vw';
+      else if (node.closest('.stagger'))    sizes = '(max-width: 760px) 55vw, 42vw';
+    }
+
     img.src = src;
+    img.srcset = small + ' 640w, ' + src + ' ' + (entry.w || 1200) + 'w';
+    img.sizes = sizes;
     img.alt = (entry.alt) || node.getAttribute('data-alt') || 'Bridal makeup by Helen McClurg';
     img.decoding = 'async';
     if (entry.w) img.width = entry.w;
     if (entry.h) img.height = entry.h;
     if (entry.pos) img.style.objectPosition = entry.pos;
 
-    // The first few images on screen load immediately; the rest wait
-    // until they are nearly in view, so the page paints fast.
+    // if a -sm file is ever missing, fall back to the full size silently
+    img.addEventListener('error', function once() {
+      img.removeEventListener('error', once);
+      img.srcset = '';
+      img.src = src;
+    });
+
     var priority = (key === 'hero') || node.hasAttribute('data-eager');
     if (priority) {
       img.loading = 'eager';
@@ -99,7 +119,6 @@
       img.loading = 'lazy';
     }
 
-    // fade in rather than snapping from the grey placeholder
     var done = function () { img.classList.add('is-loaded'); };
     if (img.complete) done(); else img.addEventListener('load', done);
 
