@@ -39,6 +39,7 @@ const IMAGES = {
   'insta-05': { src:'images/bride-sleek-veil.jpg', alt:"Bride in a sleek crepe gown with a pearl-edged veil", w:1200, h:2133, pos:'center 30%' },
   'insta-06': { src:'images/party-gold-staircase.jpg', alt:"Bride and bridesmaids in gold satin on a sweeping staircase", w:1160, h:819, pos:'center 32%' },
   'insta-07': { src:'images/helen-blusher.jpg', alt:"Helen McClurg applying blusher to a bride", w:828, h:1242, pos:'center 40%' },
+  'insta-09': { src:'images/bride-mothers.jpg', alt:"Bride with both mothers on her wedding day", w:1251, h:959, pos:'center 35%' },
   'insta-08': { src:'images/bride-updo.jpg', alt:"Bride with a soft updo and pearl hairpiece", w:1200, h:1800, pos:'center 30%' },
 
   /* ---------- ABOUT ---------- */
