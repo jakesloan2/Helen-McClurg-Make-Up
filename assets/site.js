@@ -18,9 +18,7 @@
   var hero = document.querySelector('.hero');
 
   function revealHero() {
-    if (hero) {
-      requestAnimationFrame(function () { hero.classList.add('is-in'); });
-    }
+    if (hero) requestAnimationFrame(function () { hero.classList.add('is-in'); });
   }
 
   function dismissPreloader() {
@@ -30,32 +28,26 @@
     revealHero();
     setTimeout(function () {
       if (preload && preload.parentNode) preload.parentNode.removeChild(preload);
-    }, 900);
+    }, 1000);
   }
 
   if (preload) {
-    var seen = false;
-    try { seen = sessionStorage.getItem('hmc-preloader') === 'shown'; } catch (e) { seen = false; }
+    // Shows every time the homepage is opened, and holds long enough
+    // to read. Three safety nets so it can never stick.
+    document.body.classList.add('is-locked');
+    var MIN_MS = 2600;
+    var started = Date.now();
 
-    if (seen) {
-      preload.classList.add('is-done');
-      if (preload.parentNode) preload.parentNode.removeChild(preload);
-      revealHero();
-    } else {
-      try { sessionStorage.setItem('hmc-preloader', 'shown'); } catch (e) {}
-      document.body.classList.add('is-locked');
+    var finish = function () {
+      var waited = Date.now() - started;
+      setTimeout(dismissPreloader, Math.max(0, MIN_MS - waited));
+    };
 
-      // hard cap — runs no matter what else happens
-      setTimeout(dismissPreloader, 2400);
+    if (document.readyState === 'complete') finish();
+    else window.addEventListener('load', finish);
 
-      if (document.readyState === 'complete') {
-        setTimeout(dismissPreloader, 1500);
-      } else {
-        window.addEventListener('load', function () { setTimeout(dismissPreloader, 900); });
-      }
-      // last resort if load never fires
-      setTimeout(dismissPreloader, 5000);
-    }
+    setTimeout(dismissPreloader, MIN_MS + 1800);   // hard cap
+    setTimeout(dismissPreloader, 6000);            // last resort
   } else {
     revealHero();
   }
@@ -66,6 +58,8 @@
   var ICON = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><rect x="3" y="4" width="18" height="16"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="M3 17l5-4 4 3 3-3 6 5"/></svg>';
   var library = (typeof IMAGES !== 'undefined') ? IMAGES : {};
 
+  var eagerCount = 0;
+
   Array.prototype.forEach.call(document.querySelectorAll('[data-slot]'), function (node) {
     var key = node.getAttribute('data-slot');
     var ratio = node.getAttribute('data-ratio') || '3/4';
@@ -75,36 +69,41 @@
 
     var entry = library[key];
     var src = (entry && typeof entry === 'object') ? entry.src : entry;
-    var alt = (entry && typeof entry === 'object' && entry.alt) ? entry.alt : null;
-    if (src) {
-      var img = new Image();
-      var small = src.replace(/\.jpg$/, '-sm.jpg');
 
-      img.alt = alt || node.getAttribute('data-alt') || 'Bridal makeup by Helen McClurg';
-      img.decoding = 'async';
-
-      if (key === 'hero') {
-        img.loading = 'eager';
-        img.setAttribute('fetchpriority', 'high');
-      } else {
-        img.loading = 'lazy';
-      }
-
-      // Use the small file on phones if it exists; otherwise fall back to
-      // the full-size file automatically. This means a missing -sm file
-      // can never break an image -- it just serves the bigger version.
-      var useSmall = window.matchMedia('(max-width: 760px)').matches;
-      img.src = useSmall ? small : src;
-      img.onerror = function () {
-        if (img.src.indexOf('-sm.jpg') !== -1) { img.onerror = null; img.src = src; }
-      };
-      node.appendChild(img);
-    } else {
+    if (!src) {
       var tag = document.createElement('span');
       tag.className = 'slot__tag';
       tag.innerHTML = ICON + '<span>' + key + '</span>';
       node.appendChild(tag);
+      return;
     }
+
+    var img = new Image();
+    img.src = src;
+    img.alt = (entry.alt) || node.getAttribute('data-alt') || 'Bridal makeup by Helen McClurg';
+    img.decoding = 'async';
+    if (entry.w) img.width = entry.w;
+    if (entry.h) img.height = entry.h;
+    if (entry.pos) img.style.objectPosition = entry.pos;
+
+    // The first few images on screen load immediately; the rest wait
+    // until they are nearly in view, so the page paints fast.
+    var priority = (key === 'hero') || node.hasAttribute('data-eager');
+    if (priority) {
+      img.loading = 'eager';
+      img.setAttribute('fetchpriority', key === 'hero' ? 'high' : 'auto');
+    } else if (eagerCount < 3) {
+      img.loading = 'eager';
+      eagerCount++;
+    } else {
+      img.loading = 'lazy';
+    }
+
+    // fade in rather than snapping from the grey placeholder
+    var done = function () { img.classList.add('is-loaded'); };
+    if (img.complete) done(); else img.addEventListener('load', done);
+
+    node.appendChild(img);
   });
 
   /* ----------------------------------------------------------
@@ -204,13 +203,8 @@
   /* ----------------------------------------------------------
      5. REVIEWS + VENUES
   ---------------------------------------------------------- */
-  var reviewsGrid = document.getElementById('reviewsGrid');
-  if (reviewsGrid && typeof REVIEWS !== 'undefined' && !reviewsGrid.children.length) {
-    reviewsGrid.innerHTML = REVIEWS.map(function (r) {
-      return '<figure class="review"><blockquote>&ldquo;' + r.quote + '&rdquo;</blockquote>' +
-             '<figcaption>' + r.name + ' &middot; ' + r.meta + '</figcaption></figure>';
-    }).join('');
-  }
+  var ratingEl = document.getElementById('ratingValue');
+  if (ratingEl && typeof GOOGLE_RATING !== 'undefined') ratingEl.textContent = GOOGLE_RATING;
   if (typeof GOOGLE_REVIEW_URL !== 'undefined') {
     Array.prototype.forEach.call(document.querySelectorAll('[data-google-link]'), function (a) {
       a.href = GOOGLE_REVIEW_URL;
@@ -236,7 +230,9 @@
       return '<figure class="quote">' +
                '<div class="quote__stars" aria-label="' + (t.stars || 5) + ' out of 5">' + stars + '</div>' +
                '<blockquote class="quote__body">' + paras +
-                 '<figcaption class="quote__who">' + t.who + '</figcaption>' +
+                 '<figcaption class="quote__who">' + t.who +
+                   (t.meta ? ' <span>&middot; ' + t.meta + '</span>' : '') +
+                 '</figcaption>' +
                '</blockquote>' +
              '</figure>';
     }).join('');
