@@ -26,7 +26,13 @@
 <body>
 
 <!-- LOADER -->
-<div class="preload" id="preload"><span>Helen McClurg</span></div>
+<div class="preload" id="preload">
+  <div class="preload__mark">
+    <span>Helen McClurg</span>
+    <small>Bridal</small>
+    <i class="preload__rule"></i>
+  </div>
+</div>
 
 <!-- TOP BAR -->
 <header class="topbar">
@@ -72,14 +78,11 @@
   </section>
 
   <!-- INTRO -->
-  <section class="textblock reveal" id="intro">
-    <p class="eyebrow">Weddings</p>
-    <h2 class="display display--lg textblock__head">Bridal<br>Make Up</h2>
-    <div class="body-copy">
-      <p>Helen McClurg is a bridal make up specialist based in Belfast, with eighteen years in the beauty industry and thirteen of those spent with MAC Cosmetics.</p>
-      <p>Her style is about enhancing your natural beauty — a polished, timeless look that photographs flawlessly and lasts through all the dancing, happy tears and unforgettable moments of your day.</p>
-      <p>Whether you are after soft and natural, glowing and elegant, or something a little more glamorous, the aim is always the same: you, only elevated.</p>
-      <a class="textlink" href="about.html">More about Helen</a>
+  <section class="intro" id="intro">
+    <h2 class="intro__lead">Long-lasting, photograph&#8209;ready bridal make up across Northern Ireland.</h2>
+    <div class="intro__side">
+      <p>Eighteen years in the beauty industry, thirteen of them with MAC Cosmetics, and a diary built almost entirely on weddings. Helen travels to your getting-ready location, works with every member of the bridal party individually, and has everyone finished an hour before you leave.</p>
+      <p><a class="textlink" style="margin-top:6px" href="about.html">More about Helen</a></p>
     </div>
   </section>
 
@@ -89,21 +92,23 @@
     <div class="folio__stage">
       <h2 class="folio__title">Portfolio</h2>
       <div class="folio__track" id="folioTrack">
-        <figure class="folio__slide"><div data-slot="folio-01" data-ratio="4/5"></div></figure>
-        <figure class="folio__slide"><div data-slot="folio-02" data-ratio="4/5"></div></figure>
-        <figure class="folio__slide"><div data-slot="folio-03" data-ratio="4/5"></div></figure>
+        <figure class="folio__slide"><div data-slot="folio-01" data-ratio="4/5" data-eager></div></figure>
+        <figure class="folio__slide"><div data-slot="folio-02" data-ratio="4/5" data-eager></div></figure>
+        <figure class="folio__slide"><div data-slot="folio-03" data-ratio="4/5" data-eager></div></figure>
         <figure class="folio__slide"><div data-slot="folio-04" data-ratio="4/5"></div></figure>
         <figure class="folio__slide"><div data-slot="folio-05" data-ratio="4/5"></div></figure>
         <figure class="folio__slide"><div data-slot="folio-06" data-ratio="4/5"></div></figure>
         <figure class="folio__slide"><div data-slot="folio-07" data-ratio="4/5"></div></figure>
         <figure class="folio__slide"><div data-slot="folio-08" data-ratio="4/5"></div></figure>
+        <figure class="folio__slide"><div data-slot="folio-09" data-ratio="4/5"></div></figure>
+        <figure class="folio__slide"><div data-slot="folio-10" data-ratio="4/5"></div></figure>
       </div>
     </div>
     <div class="folio__nav">
       <button class="folio__arrow" id="folioPrev" aria-label="Previous photograph">
         <svg viewBox="0 0 56 14" aria-hidden="true"><path d="M56 7H1M8 1L1 7l7 6"/></svg>
       </button>
-      <span class="folio__count" id="folioCount">01 / 08</span>
+      <span class="folio__count" id="folioCount">01 / 10</span>
       <button class="folio__arrow" id="folioNext" aria-label="Next photograph">
         <svg viewBox="0 0 56 14" aria-hidden="true"><path d="M0 7h55M48 1l7 6-7 6"/></svg>
       </button>
@@ -135,19 +140,12 @@
     </div>
   </section>
 
-  <!-- REVIEWS -->
-  <section class="reviews reveal" aria-label="Reviews">
-    <div class="reviews__head">
-      <div class="reviews__score">
-        <span class="gmark" aria-hidden="true">G</span>
-        <div>
-          <div class="stars" aria-hidden="true">★★★★★</div>
-          <p class="reviews__meta">5.0 · Google Reviews</p>
-        </div>
-      </div>
-      <a class="textlink" style="margin:0" href="#" data-google-link target="_blank" rel="noopener">Read all reviews</a>
-    </div>
-    <div class="reviews__grid" id="reviewsGrid"></div>
+  <!-- GOOGLE RATING -->
+  <section class="rating reveal" aria-label="Google rating">
+    <div class="rating__stars" aria-hidden="true">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
+    <h2 class="rating__title">Rated <span id="ratingValue">5.0</span> on Google</h2>
+    <p class="rating__sub">Helen's brides consistently rate her five stars for the calm of the morning, the artistry, and makeup that lasts from the first photograph to the last dance.</p>
+    <a class="rating__btn" href="testimonials.html">Read our reviews</a>
   </section>
 
   <!-- VENUES -->
@@ -176,6 +174,8 @@
       <a data-insta href="#"><div data-slot="insta-04" data-ratio="1/1"></div></a>
       <a data-insta href="#"><div data-slot="insta-05" data-ratio="1/1"></div></a>
       <a data-insta href="#"><div data-slot="insta-06" data-ratio="1/1"></div></a>
+      <a data-insta href="#"><div data-slot="insta-07" data-ratio="1/1"></div></a>
+      <a data-insta href="#"><div data-slot="insta-08" data-ratio="1/1"></div></a>
     </div>
     <a class="insta__handle" data-insta-handle href="#">@helen_mcclurg_makeup</a>
   </section>
