@@ -144,41 +144,61 @@
 
   /* ----------------------------------------------------------
      4. PORTFOLIO CAROUSEL
+     Native scroll-snap: the browser handles the physics, so swipe,
+     trackpad and arrows all behave the same. JS only tracks which
+     slide is centred (for the scale/fade) and drives the arrows.
   ---------------------------------------------------------- */
   var track = document.getElementById('folioTrack');
   if (track) {
     var slides = Array.prototype.slice.call(track.children);
     var countEl = document.getElementById('folioCount');
-    var index = 0;
+    var current = 0;
 
     var pad = function (n) { return n < 10 ? '0' + n : String(n); };
 
-    var goTo = function (i) {
-      index = (i + slides.length) % slides.length;
-      var slide = slides[index];
-      var offset = slide.offsetLeft + slide.offsetWidth / 2 - track.parentElement.offsetWidth / 2;
-      track.style.transform = 'translateX(' + (-offset) + 'px)';
-      slides.forEach(function (s, n) { s.classList.toggle('is-active', n === index); });
-      if (countEl) countEl.textContent = pad(index + 1) + ' / ' + pad(slides.length);
+    // which slide is nearest the centre of the viewport strip?
+    var measure = function () {
+      var mid = track.getBoundingClientRect().left + track.clientWidth / 2;
+      var best = 0, bestDist = Infinity;
+      slides.forEach(function (s, i) {
+        var r = s.getBoundingClientRect();
+        var d = Math.abs((r.left + r.width / 2) - mid);
+        if (d < bestDist) { bestDist = d; best = i; }
+      });
+      return best;
     };
+
+    var paint = function () {
+      var i = measure();
+      if (i !== current) current = i;
+      slides.forEach(function (s, n) { s.classList.toggle('is-active', n === current); });
+      if (countEl) countEl.textContent = pad(current + 1) + ' / ' + pad(slides.length);
+    };
+
+    var scrollTo = function (i) {
+      i = Math.max(0, Math.min(slides.length - 1, i));
+      var slide = slides[i];
+      var r = slide.getBoundingClientRect();
+      var t = track.getBoundingClientRect();
+      var delta = (r.left + r.width / 2) - (t.left + t.clientWidth / 2);
+      track.scrollTo({ left: track.scrollLeft + delta, behavior: 'smooth' });
+    };
+
+    var ticking = false;
+    track.addEventListener('scroll', function () {
+      if (ticking) return;
+      ticking = true;
+      window.requestAnimationFrame(function () { paint(); ticking = false; });
+    }, { passive: true });
 
     var prev = document.getElementById('folioPrev');
     var next = document.getElementById('folioNext');
-    if (prev) prev.addEventListener('click', function () { goTo(index - 1); });
-    if (next) next.addEventListener('click', function () { goTo(index + 1); });
-    window.addEventListener('resize', function () { goTo(index); });
+    if (prev) prev.addEventListener('click', function () { scrollTo(measure() - 1); });
+    if (next) next.addEventListener('click', function () { scrollTo(measure() + 1); });
 
-    var x0 = null;
-    track.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
-    track.addEventListener('touchend', function (e) {
-      if (x0 === null) return;
-      var dx = e.changedTouches[0].clientX - x0;
-      if (Math.abs(dx) > 44) goTo(index + (dx < 0 ? 1 : -1));
-      x0 = null;
-    });
-
-    goTo(0);
-    window.addEventListener('load', function () { goTo(index); });
+    window.addEventListener('resize', paint);
+    window.addEventListener('load', paint);
+    paint();
   }
 
   /* ----------------------------------------------------------
@@ -202,6 +222,39 @@
     venuesRow.innerHTML = VENUES.concat(VENUES).map(function (v) {
       return '<span>' + v + '</span>';
     }).join('');
+  }
+
+
+  /* ----------------------------------------------------------
+     5b. TESTIMONIALS + INSTAGRAM
+  ---------------------------------------------------------- */
+  var quotes = document.getElementById('quotes');
+  if (quotes && typeof TESTIMONIALS !== 'undefined') {
+    quotes.innerHTML = TESTIMONIALS.map(function (t) {
+      var stars = new Array((t.stars || 5) + 1).join('\u2605');
+      var paras = t.paras.map(function (p) { return '<p>' + p + '</p>'; }).join('');
+      return '<figure class="quote">' +
+               '<div class="quote__stars" aria-label="' + (t.stars || 5) + ' out of 5">' + stars + '</div>' +
+               '<blockquote class="quote__body">' + paras +
+                 '<figcaption class="quote__who">' + t.who + '</figcaption>' +
+               '</blockquote>' +
+             '</figure>';
+    }).join('');
+  }
+
+  if (typeof INSTAGRAM_URL !== 'undefined') {
+    Array.prototype.forEach.call(document.querySelectorAll('[data-insta]'), function (a) {
+      a.href = INSTAGRAM_URL;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      if (!a.getAttribute('aria-label')) a.setAttribute('aria-label', 'Helen McClurg on Instagram');
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('[data-insta-handle]'), function (a) {
+      a.href = INSTAGRAM_URL;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      if (typeof INSTAGRAM_HANDLE !== 'undefined') a.textContent = INSTAGRAM_HANDLE;
+    });
   }
 
   /* ----------------------------------------------------------
