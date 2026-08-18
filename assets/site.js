@@ -65,7 +65,11 @@
     var ratio = node.getAttribute('data-ratio') || '3/4';
     node.classList.add('slot');
     if (node.hasAttribute('data-dark')) node.classList.add('slot--dark');
-    if (ratio !== 'cover') node.style.setProperty('--ar', ratio);
+    if (ratio === 'cover') {
+      node.style.aspectRatio = 'auto';   // fill the parent instead
+    } else {
+      node.style.setProperty('--ar', ratio);
+    }
 
     var entry = library[key];
     var src = (entry && typeof entry === 'object') ? entry.src : entry;
