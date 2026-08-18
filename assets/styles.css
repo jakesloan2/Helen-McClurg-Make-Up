@@ -201,8 +201,9 @@ button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
   position:relative;height:100svh;min-height:560px;
   overflow:hidden;background:var(--oat);
 }
-.hero__media{position:absolute;inset:0}
-.hero__media .slot{height:100%;aspect-ratio:auto}
+.hero__media{position:absolute;inset:0;height:100%}
+/* the hero div is itself the image slot, so no descendant selector here */
+.hero__media.slot{aspect-ratio:auto;height:100%}
 .hero__media::after{
   content:"";position:absolute;inset:0;
   background:linear-gradient(180deg,rgba(0,0,0,.34) 0%,rgba(0,0,0,.06) 46%,rgba(0,0,0,.34) 100%);
